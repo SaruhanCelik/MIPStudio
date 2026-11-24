@@ -1,0 +1,54 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "qt-mingw",
+      "hidden": true,
+      "generator": "Ninja",
+      "environment": {
+        "MIPSTUDIO_QT_ROOT": "C:/Qt/6.11.2/mingw_64",
+        "MIPSTUDIO_QT_TOOLS": "C:/Qt/Tools",
+        "PATH": "$env{MIPSTUDIO_QT_TOOLS}/mingw1310_64/bin;$env{MIPSTUDIO_QT_ROOT}/bin;$env{MIPSTUDIO_QT_TOOLS}/Ninja;$penv{PATH}"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "$env{MIPSTUDIO_QT_TOOLS}/mingw1310_64/bin/g++.exe",
+        "CMAKE_RC_COMPILER": "$env{MIPSTUDIO_QT_TOOLS}/mingw1310_64/bin/windres.exe",
+        "CMAKE_MAKE_PROGRAM": "$env{MIPSTUDIO_QT_TOOLS}/Ninja/ninja.exe",
+        "CMAKE_PREFIX_PATH": "$env{MIPSTUDIO_QT_ROOT}",
+        "MIPSTUDIO_RELEASE_YEAR": "2026"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "MIPStudio Debug — Qt 6.11.2 MinGW 64-bit",
+      "inherits": "qt-mingw",
+      "binaryDir": "${sourceDir}/build-verified-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "MIPSTUDIO_BUILD_STARTUP_TESTS": true
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "MIPStudio Release — Qt 6.11.2 MinGW 64-bit",
+      "inherits": "qt-mingw",
+      "binaryDir": "${sourceDir}/build-verified-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "MIPSTUDIO_BUILD_STARTUP_TESTS": false
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "debug", "configurePreset": "debug", "jobs": 4 },
+    { "name": "release", "configurePreset": "release", "jobs": 4 }
+  ],
+  "testPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error" }
+    }
+  ]
+}

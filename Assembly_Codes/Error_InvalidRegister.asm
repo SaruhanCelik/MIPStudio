@@ -1,0 +1,1 @@
+add $banana, $t0, $t1

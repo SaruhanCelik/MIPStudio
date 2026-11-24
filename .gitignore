@@ -1,0 +1,52 @@
+# CMake, Ninja, Qt Creator, and IDE build directories
+/build/
+/build-*/
+/cmake-build-*/
+/out/
+/.cache/
+CMakeFiles/
+CMakeCache.txt
+CMakeUserPresets.json
+compile_commands.json
+.ninja_deps
+.ninja_log
+Testing/
+*_autogen/
+
+# Local IDE preferences and caches
+/.qtcreator/
+*.user
+*.user.*
+.vs/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.VC.db
+.qtc_clangd/
+
+# Generated binaries / libraries / debug symbols
+*.exe
+*.dll
+*.a
+*.lib
+*.obj
+*.o
+*.pdb
+*.ilk
+*.exp
+*.d
+
+# Release deployments are GitHub Release assets, NOT Git history
+/release/
+/dist/
+/package/
+
+# Diagnostic artifacts and temporary files
+/verification/
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="branding/mips_studio_logo.png">assets/mips_studio_logo.png</file>
+        <file alias="branding/mips_studio.ico">assets/mips_studio.ico</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,8 @@
+#ifndef MIPSTUDIO_BUILD_INFO_H
+#define MIPSTUDIO_BUILD_INFO_H
+
+// Generated from the project version and the configurable CMake release year.
+#define MIPSTUDIO_VERSION "@PROJECT_VERSION@"
+#define MIPSTUDIO_RELEASE_YEAR "@MIPSTUDIO_RELEASE_YEAR@"
+
+#endif
