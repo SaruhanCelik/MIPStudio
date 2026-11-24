@@ -124,13 +124,21 @@ set(MIPSTUDIO_WIDGET_SOURCES
     include/gui/StartupDiagnostics.h
 )
 
+set(MIPSTUDIO_PLATFORM_RESOURCES)
+
+if(WIN32)
+    list(APPEND MIPSTUDIO_PLATFORM_RESOURCES
+        resources/windows.rc
+    )
+endif()
+
 qt_add_executable(
     mips_gui
     src/gui_main.cpp
     ${MIPSTUDIO_WIDGET_SOURCES}
 
     resources.qrc
-    resources/windows.rc
+    ${MIPSTUDIO_PLATFORM_RESOURCES}
 )
 
 
