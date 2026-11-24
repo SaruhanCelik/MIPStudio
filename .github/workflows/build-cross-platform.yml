@@ -3,62 +3,121 @@ name: Cross-platform build
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Build on ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os:
+          - ubuntu-latest
+          - macos-latest
 
     runs-on: ${{ matrix.os }}
+
+    timeout-minutes: 30
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      # --------------------------------------------------
+      # LINUX DEPENDENCIES
+      # --------------------------------------------------
+
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
+
           sudo apt-get install -y \
-            cmake ninja-build g++ \
-            qt6-base-dev qt6-base-dev-tools \
+            cmake \
+            ninja-build \
+            g++ \
+            qt6-base-dev \
             qt6-tools-dev \
+            qt6-tools-dev-tools \
             libgl1 \
             libxkbcommon-x11-0
+
+      # --------------------------------------------------
+      # MACOS DEPENDENCIES
+      # --------------------------------------------------
 
       - name: Install macOS dependencies
         if: runner.os == 'macOS'
         run: |
           brew install cmake ninja qt
 
-      - name: Configure
+      # --------------------------------------------------
+      # CONFIGURATION
+      # --------------------------------------------------
+
+      - name: Configure Linux build
+        if: runner.os == 'Linux'
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DMIPSTUDIO_BUILD_STARTUP_TESTS=ON
 
-      - name: Build
-        run: cmake --build build --parallel 2
+      - name: Configure macOS build
+        if: runner.os == 'macOS'
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DMIPSTUDIO_BUILD_STARTUP_TESTS=ON
 
-      - name: Run tests
-        run: ctest --test-dir build --output-on-failure
+      # --------------------------------------------------
+      # BUILD
+      # --------------------------------------------------
 
-      - name: Upload Linux build
+      - name: Build MIPStudio
+        run: |
+          cmake --build build --parallel 2
+
+      # --------------------------------------------------
+      # TESTS
+      # --------------------------------------------------
+
+      - name: Run regression tests
+        run: |
+          ctest --test-dir build \
+            --output-on-failure
+
+      # --------------------------------------------------
+      # LINUX ARTIFACT
+      # --------------------------------------------------
+
+      - name: Upload Linux executable
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
-          name: MIPStudio-linux-build
-          path: build/mips_gui
+          name: MIPStudio-linux-x64-build
+          path: build/MIPStudio
+          if-no-files-found: error
 
-      - name: Upload macOS application
+      # --------------------------------------------------
+      # MACOS ARTIFACT
+      # --------------------------------------------------
+
+      - name: Upload macOS application bundle
         if: runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
           name: MIPStudio-macos-build
-          path: build/mips_gui.app
+          path: build/MIPStudio.app
+          if-no-files-found: error
